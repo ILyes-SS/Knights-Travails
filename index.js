@@ -46,27 +46,56 @@ graph.forEach((arr1) => {
   });
 });
 
-function move(coordinates) {
-  let x = coordinates[0];
-  let y = coordinates[1];
-  let possiblePaths = [
-    [x + 1, y + 2],
-    [x + 1, y - 2],
-    [x - 1, y + 2],
-    [x - 1, y - 2],
-    [x + 2, y + 1],
-    [x - 2, y + 1],
-    [x + 2, y - 1],
-    [x - 2, y - 1],
-  ];
-  if (
-    possiblePaths[0][0] >= 0 &&
-    possiblePaths[0][0] <= 7 &&
-    possiblePaths[0][1] >= 0 &&
-    possiblePaths[0][1] <= 7
-  )
-    return possiblePaths[0];
-  else return null;
+function knightMoves(coordStart, coordEnd) {
+  let path = [...coordStart];
+  let i = graph[coordStart[0]][coordStart[1]].length - 1;
+  for (i; i >= 0; i--) {
+    let startPossibleValues = graph[coordStart[0]][coordStart[1]][i];
+    if (JSON.stringify(startPossibleValues) == JSON.stringify(coordEnd)) {
+      return [path, [...coordEnd]];
+    }
+
+    let j = graph[startPossibleValues[0]][startPossibleValues[1]][i].length - 1;
+    for (j; j >= 0; j--) {
+      let spvPossibleValues =
+        graph[startPossibleValues[0]][startPossibleValues[1]][j];
+      if (JSON.stringify(spvPossibleValues) == JSON.stringify(coordEnd)) {
+        return [path, [...startPossibleValues], [...coordEnd]];
+      }
+    }
+  }
 }
-console.log(move([6, 0]));
+function bfs(coordStart, coordEnd) {
+  let queue = [[...coordStart]];
+  let path;
+  let shiftedElems = [];
+  while (queue.length > 0) {
+    let shifted = queue.shift();
+    shiftedElems.push(shifted);
+    let i = graph[shifted[0]][shifted[1]].length - 1;
+    for (i; i >= 0; i--) {
+      let possibleValues = graph[shifted[0]][shifted[1]][i];
+      queue.push(possibleValues);
+      if (JSON.stringify(possibleValues) == JSON.stringify(coordEnd)) {
+        let before;
+        let after = [...coordEnd];
+        path = [[...coordEnd]];
+        while (shiftedElems.length > 0) {
+          before = shiftedElems.pop();
+          let j = graph[before[0]][before[1]].length - 1;
+          for (j; j >= 0; j--) {
+            let values = graph[before[0]][before[1]][j];
+            if (JSON.stringify(values) == JSON.stringify(after)) {
+              path.unshift(before);
+              after = before;
+            }
+          }
+        }
+        return path;
+      }
+    }
+  }
+}
+
 console.log(graph);
+console.log(bfs([3, 3], [4, 3]));
