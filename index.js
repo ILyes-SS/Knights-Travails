@@ -1,12 +1,3 @@
-let board = [
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-  [0, 1, 2, 3, 4, 5, 6, 7],
-];
 let graph = [];
 for (let i = 0; i <= 7; i++) {
   graph[i] = [];
@@ -47,25 +38,6 @@ graph.forEach((arr1) => {
 });
 
 function knightMoves(coordStart, coordEnd) {
-  let path = [...coordStart];
-  let i = graph[coordStart[0]][coordStart[1]].length - 1;
-  for (i; i >= 0; i--) {
-    let startPossibleValues = graph[coordStart[0]][coordStart[1]][i];
-    if (JSON.stringify(startPossibleValues) == JSON.stringify(coordEnd)) {
-      return [path, [...coordEnd]];
-    }
-
-    let j = graph[startPossibleValues[0]][startPossibleValues[1]][i].length - 1;
-    for (j; j >= 0; j--) {
-      let spvPossibleValues =
-        graph[startPossibleValues[0]][startPossibleValues[1]][j];
-      if (JSON.stringify(spvPossibleValues) == JSON.stringify(coordEnd)) {
-        return [path, [...startPossibleValues], [...coordEnd]];
-      }
-    }
-  }
-}
-function bfs(coordStart, coordEnd) {
   let queue = [[...coordStart]];
   let path;
   let shiftedElems = [];
@@ -98,4 +70,4 @@ function bfs(coordStart, coordEnd) {
 }
 
 console.log(graph);
-console.log(bfs([3, 3], [4, 3]));
+console.log(knightMoves([3, 3], [4, 3]));
